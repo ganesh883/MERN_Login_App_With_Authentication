@@ -6,7 +6,7 @@ import {Toaster} from 'react-hot-toast';
 import {useFormik} from 'formik';
 
 
-export default function username() {
+export default function Username() {
 
    const formik = useFormik({
       initialValues :{
@@ -18,7 +18,7 @@ export default function username() {
         console.log(values);
       }
    })
-   
+
   return (
     <div className="main-container">
       <div className="card">
