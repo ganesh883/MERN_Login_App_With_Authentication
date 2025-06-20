@@ -13,18 +13,12 @@ export default function username() {
         username : ''
       },
       validateOnBlur: false,
-      validateOnBlur : false,
+      validateOnChange : false,
       onSubmit : async values =>{
         console.log(values);
       }
    })
-
-
-
-
-
-
-
+   
   return (
     <div className="main-container">
       <div className="card">
