@@ -1,10 +1,10 @@
 import React from "react";
-import '../Styles/username.css';
+import '../Styles/Component.css';
 import {Link} from 'react-router-dom';
 import avatar from '../assets/profile.png';
 import {Toaster} from 'react-hot-toast';
 import {useFormik} from 'formik';
-
+import { usernameValidate } from "../helper/validate";
 
 export default function Username() {
 
@@ -12,6 +12,7 @@ export default function Username() {
       initialValues :{
         username : ''
       },
+      validate : usernameValidate,
       validateOnBlur: false,
       validateOnChange : false,
       onSubmit : async values =>{
@@ -21,6 +22,7 @@ export default function Username() {
 
   return (
     <div className="main-container">
+      <Toaster className="Toaster" reverseOrder={false}></Toaster>
       <div className="card">
 
         <div className="title">
@@ -34,7 +36,7 @@ export default function Username() {
             </div>
 
             <div className="Mainform3">
-                <input {...formik.getFieldProps('username')} type="text" placeholder="Username"></input>
+                <input {...formik.getFieldProps('username')} type="text" placeholder="Enter Username"></input>
                 <button type="submit">Let's Go</button>
             </div>
 
