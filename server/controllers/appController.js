@@ -1,3 +1,4 @@
+import UserModel from "../Model/User.model.js";
 
 /**POST: http://localhost:5000/api/register */
 export async function register(req,res){
