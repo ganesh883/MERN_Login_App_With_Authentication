@@ -2,7 +2,23 @@ import UserModel from "../Model/User.model.js";
 
 /**POST: http://localhost:5000/api/register */
 export async function register(req,res){
-    res.json('register route');
+    
+    try {
+        const {username, password, profile, email} = req.body;
+
+        //check the existing user
+        const existUsername = new Promise((resolve,reject)=>{
+            UserModel.fineOne({username}, function(err,user){
+                if(err) reject(new Error(err))
+                if(user) reject ({error: "Please use unique username"});
+
+                resolve();
+            })
+        })
+
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 }
 
 /**POST: http://localhost:5000/api/login */
