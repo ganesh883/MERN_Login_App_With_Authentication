@@ -1,4 +1,6 @@
+import { errors } from "mongodb-memory-server";
 import UserModel from "../Model/User.model.js";
+import bcrypt from 'bcrypt';
 
 /**POST: http://localhost:5000/api/register */
 export async function register(req,res){
@@ -7,14 +9,52 @@ export async function register(req,res){
         const {username, password, profile, email} = req.body;
 
         //check the existing user
-        const existUsername = new Promise((resolve,reject)=>{
-            UserModel.fineOne({username}, function(err,user){
+            const existUsername = new Promise((resolve,reject)=>{
+                UserModel.findOne({username}, function(err,user){
+                    if(err) reject(new Error(err))
+                    if(user) reject ({error: "Please use unique username"});
+
+                    resolve();
+                })
+            })
+
+        //check the existing E-mail
+        const existEmail = new Promise((resolve,reject)=>{
+            UserModel.findOne({email}, function(err,email){
                 if(err) reject(new Error(err))
-                if(user) reject ({error: "Please use unique username"});
+                if(email) reject ({error: "Please use unique Email"});
 
                 resolve();
             })
-        })
+        });
+
+        Promise.all([existUsername,existEmail])
+            .then(()=>{
+                    if(password){
+                        bcrypt.hash(password,10)
+                            .then(hashedPassword =>{
+                                
+                                const user = new UserModel({
+                                    username,
+                                    password: hashedPassword,
+                                    profile: profile || '',
+                                    email
+                                });
+
+                                user.save()
+                                    .then(result => res.status(201).send({msg: "User Registeration Successfull"}))
+                                    .catch(error => res.status(500).send({error}))
+                            }).catch(error=>{
+                                return res.status(500).send({
+                                    error: "Unable to hashed password"
+                                })
+                            })
+                    }
+            }).catch(error =>{
+                return res.status(500).send({
+                    error: "Unable to hashed password"
+                })
+            })
 
     } catch (error) {
         return res.status(500).send(error);
