@@ -2,62 +2,45 @@ import { errors } from "mongodb-memory-server";
 import UserModel from "../Model/User.model.js";
 import bcrypt from 'bcrypt';
 
-/**POST: http://localhost:5000/api/register */
+/**POST: http://localhost:8080/api/register */
 export async function register(req,res){
     
     try {
-        const {username, password, profile, email} = req.body;
+        const { username, password, profile, email } = req.body;
 
-        //check the existing user
-            const existUsername = new Promise((resolve,reject)=>{
-                UserModel.findOne({username}, function(err,user){
-                    if(err) reject(new Error(err))
-                    if(user) reject ({error: "Please use unique username"});
+        // Check if username exists
+        const existingUsername = await UserModel.findOne({ username });
+        if (existingUsername) {
+            return res.status(400).send({ error: "Please use unique username" });
+        }
 
-                    resolve();
-                })
-            })
+        // Check if email exists
+        const existingEmail = await UserModel.findOne({ email });
+        if (existingEmail) {
+            return res.status(400).send({ error: "Please use unique email" });
+        }
 
-        //check the existing E-mail
-        const existEmail = new Promise((resolve,reject)=>{
-            UserModel.findOne({email}, function(err,email){
-                if(err) reject(new Error(err))
-                if(email) reject ({error: "Please use unique Email"});
+        // Check if password is provided
+        if (!password) {
+            return res.status(400).send({ error: "Password is required" });
+        }
 
-                resolve();
-            })
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create user
+        const user = new UserModel({
+            username,
+            password: hashedPassword,
+            profile: profile || '',
+            email
         });
 
-        Promise.all([existUsername,existEmail])
-            .then(()=>{
-                    if(password){
-                        bcrypt.hash(password,10)
-                            .then(hashedPassword =>{
-                                
-                                const user = new UserModel({
-                                    username,
-                                    password: hashedPassword,
-                                    profile: profile || '',
-                                    email
-                                });
-
-                                user.save()
-                                    .then(result => res.status(201).send({msg: "User Registeration Successfull"}))
-                                    .catch(error => res.status(500).send({error}))
-                            }).catch(error=>{
-                                return res.status(500).send({
-                                    error: "Unable to hashed password"
-                                })
-                            })
-                    }
-            }).catch(error =>{
-                return res.status(500).send({
-                    error: "Unable to hashed password"
-                })
-            })
+        await user.save();
+        return res.status(201).send({ msg: "User Registration Successful" });
 
     } catch (error) {
-        return res.status(500).send(error);
+        return res.status(500).send({ error: error.message || "Internal Server Error" });
     }
 }
 
