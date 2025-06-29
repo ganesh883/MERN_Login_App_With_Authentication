@@ -48,37 +48,30 @@ export async function register(req,res){
 /**POST: http://localhost:8080/api/login */
 export async function login(req,res){
    
-    const {username, password} = req.body;
+        const {username, password} = req.body;
 
-    try {
-        UserModel.findOne({username})
-            .then(user =>{
-                bcrypt.compare(password, user.password)
-                    .then(passwordCheck =>{
-                        if(!passwordCheck) return res.status(400).send({error: "Don't have Password"});
+        try {
+            const user = await UserModel.findOne({ username });
+            if (!user) return res.status(404).send({ error: "Username not Found" });
 
-                        jwt.sign({
-                            userId : user._id,
-                            username: user.username
-                        }, ENV.JWT_SECRET, {expiresIn : "24h"});
+            const passwordCheck = await bcrypt.compare(password, user.password);
+            if (!passwordCheck) return res.status(400).send({ error: "Incorrect Password" });
 
-                        return res.status(200).send({
-                            msg: "Login Successful..!",
-                            username: user.username,
-                            token
-                        });
-                    })
-                    .catch(error =>{
-                        return res.status(400).send({error: "Password does not match"})
-                    })
-            })
-            .catch(error=>{
-                return res.status(404).send({error: "Username not Found"});
-            })
-        
-    } catch (error) {
-        return res.status(500).send({error});
-    }
+            const token = jwt.sign(
+                { userId: user._id, username: user.username },
+                ENV.JWT_SECRET,
+                { expiresIn: "24h" }
+            );
+
+            return res.status(200).send({
+                msg: "Login Successful..!",
+                username: user.username,
+                token
+            });
+
+        } catch (error) {
+            return res.status(500).send({ error });
+        }
 }
 
 /**PUT: http://localhost:5000/api/updateUser */
