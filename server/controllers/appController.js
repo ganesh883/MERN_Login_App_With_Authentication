@@ -2,6 +2,7 @@ import { errors } from "mongodb-memory-server";
 import UserModel from "../Model/User.model.js";
 import bcrypt from 'bcrypt';
 import ENV from '../config.js';
+import jwt from 'jsonwebtoken';
 
 /**POST: http://localhost:8080/api/register */
 export async function register(req,res){
@@ -48,9 +49,10 @@ export async function register(req,res){
 /**POST: http://localhost:8080/api/login */
 export async function login(req,res){
    
-        const {username, password} = req.body;
-
         try {
+
+            const {username, password} = req.body;
+
             const user = await UserModel.findOne({ username });
             if (!user) return res.status(404).send({ error: "Username not Found" });
 
@@ -70,6 +72,7 @@ export async function login(req,res){
             });
 
         } catch (error) {
+            console.error("Login Error:", error);
             return res.status(500).send({ error });
         }
 }
