@@ -15,7 +15,7 @@ export async function verifyUser(req, res, next){
         let exist = await UserModel.findOne({username});
         if(!exist) return res.status(404).send({error: "Can't find User!"});
         next();
-        
+
     } catch (error) {
         return res.status(404).send({error: "Authentication Error"});
     }
@@ -100,10 +100,30 @@ export async function updateUser(req,res){
     res.json('UpdateUser Route');
 }
 
-/**GET: http://localhost:5000/api/user/example123 */
-export async function getUser(req,res){
-    res.json('getUser Route');
-}
+/**GET: http://localhost:8080/api/user/example123 */
+export async function getUser(req, res) {
+        try {
+        const { username } = req.params;
+    
+            if (!username) {
+                return res.status(400).send({ error: "Invalid Username" }); // 400 = Bad Request
+            }
+    
+        const user = await UserModel.findOne({ username });
+        
+            if (!user) {
+                return res.status(404).send({ error: "Couldn't Find the User" });
+            }
+
+            const {password, ...rest} = Object.assign({}, user.toJSON());
+    
+        return res.status(200).send(rest); // 200 = OK
+
+        } catch (error) {
+            console.error("getUser error:", error);
+            return res.status(500).send({ error: "Cannot Find User Data" });
+        }
+  }
 
 /**GET: http://localhost:5000/api/generateOTP */
 export async function generateOTP(req,res){
