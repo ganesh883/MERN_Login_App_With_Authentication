@@ -98,14 +98,16 @@ export async function login(req,res){
 /**PUT: http://localhost:8080/api/updateUser */
 export async function updateUser(req, res) {
     try {
-        const id = req.query.id;
-        if (!id) {
+        //const id = req.query.id;
+        const {userId} = req.user;
+
+        if (!userId) {
             return res.status(400).send({ msg: "User ID not provided" });
         }
 
         const body = req.body;
 
-        const result = await UserModel.updateOne({ _id: id }, body);
+        const result = await UserModel.updateOne({ _id: userId }, body);
 
         if (result.modifiedCount === 0) {
             return res.status(404).send({ msg: "No record updated. User may not exist." });
