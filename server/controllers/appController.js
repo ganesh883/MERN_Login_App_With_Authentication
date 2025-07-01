@@ -95,10 +95,29 @@ export async function login(req,res){
         }
 }
 
-/**PUT: http://localhost:5000/api/updateUser */
-export async function updateUser(req,res){
-    res.json('UpdateUser Route');
+/**PUT: http://localhost:8080/api/updateUser */
+export async function updateUser(req, res) {
+    try {
+        const id = req.query.id;
+        if (!id) {
+            return res.status(400).send({ msg: "User ID not provided" });
+        }
+
+        const body = req.body;
+
+        const result = await UserModel.updateOne({ _id: id }, body);
+
+        if (result.modifiedCount === 0) {
+            return res.status(404).send({ msg: "No record updated. User may not exist." });
+        }
+
+        return res.status(200).send({ msg: "Record Updated...!", result });
+
+    } catch (error) {
+        return res.status(500).send({ error: error.message });
+    }
 }
+
 
 /**GET: http://localhost:8080/api/user/example123 */
 export async function getUser(req, res) {
