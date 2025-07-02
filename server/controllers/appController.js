@@ -3,6 +3,7 @@ import UserModel from "../Model/User.model.js";
 import bcrypt from 'bcrypt';
 import ENV from '../config.js';
 import jwt from 'jsonwebtoken';
+import otpGenerator from 'otp-generator';
 
 
 /** middleware for verify user */
@@ -146,9 +147,10 @@ export async function getUser(req, res) {
         }
   }
 
-/**GET: http://localhost:5000/api/generateOTP */
+/**GET: http://localhost:8080/api/generateOTP */
 export async function generateOTP(req,res){
-    res.json('generateOTP Route');
+    req.app.locals.OTP = await otpGenerator.generate(6, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false});
+    res.status(201).send({code: req.app.locals.OTP });
 }
 
 /**GET: http://localhost:5000/api/verifyOTP */
