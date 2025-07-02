@@ -1,4 +1,4 @@
-import { errors } from "mongodb-memory-server";
+
 import UserModel from "../Model/User.model.js";
 import bcrypt from 'bcrypt';
 import ENV from '../config.js';
@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import otpGenerator from 'otp-generator';
 
 
-/** middleware for verify user */
+/** Middleware for verify user */
 export async function verifyUser(req, res, next){
     try {
         
@@ -191,6 +191,7 @@ export async function resetPassword(req, res) {
       }
   
       const hashedPassword = await bcrypt.hash(password, 10);
+
       const result = await UserModel.updateOne(
         { username: user.username },
         { password: hashedPassword }
