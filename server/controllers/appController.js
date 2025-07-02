@@ -153,19 +153,56 @@ export async function generateOTP(req,res){
     res.status(201).send({code: req.app.locals.OTP });
 }
 
-/**GET: http://localhost:5000/api/verifyOTP */
+/**GET: http://localhost:8080/api/verifyOTP */
 export async function verifyOTP(req,res){
-    res.json('verifyOTP Route');
+    const {code} = req.query;
+
+    if(parseInt(req.app.locals.OTP) === parseInt(code)){
+        req.app.locals.OTP = null;
+        req.app.locals.resetSession = true;
+        return res.status(201).send({ msg: 'Verify Successfully!'});
+    }
+    return res.status(400).send({ error: "Invalid OTP"});
 }
 
-/**GET: http://localhost:5000/api/createResetSession */
+/**GET: http://localhost:8080/api/createResetSession */
 export async function createResetSession(req,res){
-    res.json('createResetSession Route');
+    
+    if(req.app.locals.resetSession){
+        req.app.locals.resetSession = false;
+        return res.status(201).send({ msg: "access granted!"})
+    }
+
+    return res.status(440).send({ error: "Session expired"})
 }
 
-/**PUT: http://localhost:5000/api/ResetPassword */
-export async function resetPassword(req,res){
-    res.json('resetPassword Route');
-}
+/**PUT: http://localhost:8080/api/ResetPassword */
+export async function resetPassword(req, res) {
+    try {
 
+        if(!req.app.locals.resetSession){
+            return res.status(404).send({error:"Session Expired"})
+        }
+      const { username, password } = req.body;
+  
+      const user = await UserModel.findOne({ username });
+      if (!user) {
+        return res.status(404).send({ error: "Username not found" });
+      }
+  
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const result = await UserModel.updateOne(
+        { username: user.username },
+        { password: hashedPassword }
+      );
+
+      req.app.locals.resetSession = false;
+  
+      return res.status(201).send({ msg: "Password reset successfully", result });
+  
+    } catch (error) {
+      return res.status(500).send({ error: "Something went wrong" });
+    }
+  }
+  
 
