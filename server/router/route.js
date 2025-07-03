@@ -26,12 +26,4 @@ router.route('/updateuser').put(Auth,controller.updateUser);// Used to update th
 router.route('/resetPassword').put(controller.verifyUser,controller.resetPassword);// used to reset password
 
 
-
-
-
-
-
-
-
-
 export default router;
