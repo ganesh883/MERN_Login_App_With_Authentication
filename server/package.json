@@ -15,10 +15,12 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mailgen": "^2.0.29",
     "mongodb-memory-server": "^10.1.4",
     "mongoose": "^8.16.0",
     "morgan": "^1.10.0",
     "multer": "^2.0.1",
+    "nodemailer": "^7.0.4",
     "nodemon": "^3.1.10",
     "otp-generator": "^4.0.1"
   }
