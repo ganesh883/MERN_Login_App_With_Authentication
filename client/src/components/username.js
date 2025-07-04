@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import '../Styles/Component.css';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import avatar from '../assets/profile.png';
 import {Toaster} from 'react-hot-toast';
 import {useFormik} from 'formik';
 import { usernameValidate } from "../helper/validate";
+import { useAuthStore } from "../store/store";
+import toast from "react-hot-toast";
+import { authenticate } from "../helper/helper.js";
 
 export default function Username() {
+
+    const navigate = useNavigate();
+
+    const setUsername = useAuthStore(state => state.setUsername);
+    const username = useAuthStore(state => state.auth.username);
+
+    useEffect(() =>{
+      console.log(username);
+    })
 
    const formik = useFormik({
       initialValues :{
@@ -16,8 +28,17 @@ export default function Username() {
       validateOnBlur: false,
       validateOnChange : false,
       onSubmit : async values =>{
-        console.log(values);
+        setUsername(values.username);
+        const { error } = await authenticate(values.username);
+
+        if (error?.error) {
+          toast.error(error.error);
+        } else {
+          console.log("FORM SUBMITTED ✅", values);  // ← should print now
+          navigate('/password');                    // ← should work now
+        }
       }
+      
    })
 
   return (
