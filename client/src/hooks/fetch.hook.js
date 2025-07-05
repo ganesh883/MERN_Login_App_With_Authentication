@@ -17,9 +17,13 @@ export default function useFetch(query){
 
             const {data, status} = await axios.get(`/api/${query}`);
 
-            if(status ===201){
-                setData(prev =>({ ...prev, isLoading: false}));
-                setData(prev =>({ ...prev, apiData : data, status:status}));
+            if(status ===201 || status ===200){
+                setData(prev => ({
+                    ...prev,
+                    isLoading: false,
+                    apiData: data,
+                    status
+                  }));
             }
         } catch (error) {
             setData(prev =>({ ...prev, isLoading: false, serverError: error}))

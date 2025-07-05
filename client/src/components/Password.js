@@ -11,7 +11,8 @@ import { useAuthStore } from "../store/store";
 export default function Password() {
 
   const {username} = useAuthStore(state => state.auth);
-  const[ { isLoading, apiData, serverError }] = useFetch(`/user/${username}`);
+  const fetchQuery = username ? `user/${username}` : null;
+  const[ { isLoading, apiData, serverError }] = useFetch(fetchQuery);
 
    const formik = useFormik({
       initialValues :{
