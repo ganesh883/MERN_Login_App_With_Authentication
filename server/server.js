@@ -7,8 +7,9 @@ import router from './router/route.js';
 const app = express();
 
 /**middleware */
-app.use(express.json()); //To create a server
-app.use(cors()); 
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(express.json({ limit: '500mb' }));
+app.use(express.urlencoded({ extended: true, limit: '500mb' }));
 app.use(morgan('tiny'));
 app.disable('x-powered-by');
 

@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import '../Styles/Component.css';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import avatar from '../assets/profile.png';
-import {Toaster} from 'react-hot-toast';
+import toast , {Toaster} from 'react-hot-toast';
 import {useFormik} from 'formik';
 import { registerValidation } from "../helper/validate";
 import convertToBase64 from "../helper/convert";
+import { registerUser } from "../helper/helper";
+
 
 export default function Register() {
+
+  const navigate = useNavigate(); 
 
   const [file, setFile] = useState();
 
@@ -22,7 +26,14 @@ export default function Register() {
       validateOnChange : false,
       onSubmit : async values =>{
         values = await Object.assign(values,{profile : file || ''})
-        console.log(values);
+        let registerPromise = registerUser(values);
+        toast.promise(registerPromise,{
+          loading : 'Creating...',
+          success : <b>Register Successfully Done...!</b>,
+          error : <b>Could not Register.</b>
+        });
+
+        registerPromise.then(function(){navigate('/')});
       }
    })
 
@@ -30,6 +41,7 @@ export default function Register() {
    const onUpload = async e=>{
     const base64 = await convertToBase64(e.target.files[0]);
     setFile(base64);
+   
    }
 
   return (
@@ -46,6 +58,7 @@ export default function Register() {
             <div className="Mainform2">
               <label htmlFor="profile">   <img src={file || avatar} alt="avatar"></img></label>
               <input onChange={onUpload} type="file" id="profile" name="profile"/>
+             
             </div>
 
             <div className="Mainform3">

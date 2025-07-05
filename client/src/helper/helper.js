@@ -35,7 +35,7 @@ export async function getUser({username}){
 export async function registerUser(Credentials){
 
         try {
-            
+            console.log("Image size (characters):", Credentials.profile.length);
             const {data : {msg}, status} = await axios.post(`/api/register`, Credentials);
 
             let {username, email} = Credentials;
