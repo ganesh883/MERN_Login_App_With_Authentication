@@ -1,15 +1,25 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN ;
+axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
+console.log("Loaded Base URL =>", axios.defaults.baseURL); 
+
 
 /**authenticate Function */
-export async function authenticate(username){
+export async function authenticate(username) {
     try {
-        return await axios.post('/api/authenticate', {username});
+      const response = await axios.post('/api/authenticate', { username });
+      return {
+        status: response.status,
+        data: response.data
+      };
     } catch (error) {
-        return {error: "Username doesn't exist...!"}
+      return {
+        status: error.response?.status || 500,
+        error: error.response?.data?.error || "Username doesn't exist...!"
+      };
     }
-}
+  }
+  
 
 /** get user deatils */
 export async function getUser({username}){

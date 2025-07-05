@@ -29,13 +29,13 @@ export default function Username() {
       validateOnChange : false,
       onSubmit : async values =>{
         setUsername(values.username);
-        const { error } = await authenticate(values.username);
-
-        if (error?.error) {
-          toast.error(error.error);
+        const result = await authenticate(values.username);
+      
+        if (result?.error) {
+          toast.error(result.error);
         } else {
-          console.log("FORM SUBMITTED ✅", values);  // ← should print now
-          navigate('/password');                    // ← should work now
+          console.log("FORM SUBMITTED ✅", values);
+          navigate('/password');
         }
       }
       
