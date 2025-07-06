@@ -4,7 +4,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import avatar from '../assets/profile.png';
 import toast, {Toaster} from 'react-hot-toast';
 import {useFormik} from 'formik';
-import { passwordValidate } from "../helper/validate";
+import { passwordValidate } from "../helper/validate.js";
 import useFetch from "../hooks/fetch.hook";
 import { useAuthStore } from "../store/store";
 import { verifyPassword } from "../helper/helper";
@@ -17,31 +17,40 @@ export default function Password() {
   const fetchQuery = username ? `user/${username}` : null;
   const[ { isLoading, apiData, serverError }] = useFetch(fetchQuery);
 
-   const formik = useFormik({
-      initialValues :{
-        password : 'admin@123'
-      },
-      validate : passwordValidate,
-      validateOnBlur: false,
-      validateOnChange : false,
-      onSubmit : async values =>{
-        
-        let loginPromise = verifyPassword({username, password:values.password});
-
-        toast.promise(loginPromise,{
-          loading : 'checking..',
-          success : <b> Login Successfully Done...!</b>,
-          error : <b>Password Not Match!</b>
+  const formik = useFormik({
+    initialValues: {
+      password: 'Pop-up@123',
+    },
+    validate: passwordValidate,
+    validateOnBlur: false,
+    validateOnChange: false,
+    onSubmit: async (values) => {
+      try {
+        const loginPromise = verifyPassword({ username, password: values.password });
+  
+        toast.promise(loginPromise, {
+          loading: 'Checking...',
+          success: <b>Login Successfully Done...!</b>,
+          error: <b>Password does not match!</b>,
         });
-
-        loginPromise.then(res =>{
-          let { token } = res.data;
-          localStorage.setItem('token', token);
+  
+        const res = await loginPromise;
+  
+        // ✅ Ensure res.data exists before destructuring
+        if (res?.data?.token) {
+          localStorage.setItem('token', res.data.token);
           navigate('/profile');
-        })
-
+        } else {
+          toast.error("Something went wrong. No token received.");
+        }
+  
+      } catch (error) {
+        const errMsg = error?.response?.data?.error || error.message || "Login failed!";
+        toast.error(errMsg);
       }
-   })
+    },
+  });
+  
 
    if(isLoading) return <h1>isLoading</h1>
    if(serverError) return <h1>{serverError.message}</h1>

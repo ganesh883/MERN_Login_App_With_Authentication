@@ -24,46 +24,60 @@ export async function verifyUser(req, res, next){
 
 
 /**POST: http://localhost:8080/api/register */
-export async function register(req,res){
-    
+export async function register(req, res) {
     try {
-        const { username, password, profile, email } = req.body;
-
-        // Check if username exists
-        const existingUsername = await UserModel.findOne({ username });
-        if (existingUsername) {
-            return res.status(400).send({ error: "Please use unique username" });
-        }
-
-        // Check if email exists
-        const existingEmail = await UserModel.findOne({ email });
-        if (existingEmail) {
-            return res.status(400).send({ error: "Please use unique email" });
-        }
-
-        // Check if password is provided
-        if (!password) {
-            return res.status(400).send({ error: "Password is required" });
-        }
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create user
-        const user = new UserModel({
-            username,
-            password: hashedPassword,
-            profile: profile || '',
-            email
-        });
-
-        await user.save();
-        return res.status(201).send({ msg: "User Registration Successful" });
-
+      const {
+        username,
+        password,
+        profile,
+        email,
+        firstName,
+        lastName,
+        mobile,
+        address,
+        city
+      } = req.body;
+  
+      // Check if username exists
+      const existingUsername = await UserModel.findOne({ username });
+      if (existingUsername) {
+        return res.status(400).send({ error: "Please use unique username" });
+      }
+  
+      // Check if email exists
+      const existingEmail = await UserModel.findOne({ email });
+      if (existingEmail) {
+        return res.status(400).send({ error: "Please use unique email" });
+      }
+  
+      if (!password) {
+        return res.status(400).send({ error: "Password is required" });
+      }
+  
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      // Create user with all fields
+      const user = new UserModel({
+        username,
+        password: hashedPassword,
+        email,
+        profile: profile || '',
+        firstName,
+        lastName,
+        mobile,
+        address,
+        city
+      });
+  
+      await user.save();
+      return res.status(201).send({ msg: "User Registration Successful" });
+  
     } catch (error) {
-        return res.status(500).send({ error: error.message || "Internal Server Error" });
+      return res.status(500).send({ error: error.message || "Internal Server Error" });
     }
-}
+  }
+  
 
 /**POST: http://localhost:8080/api/login */
 export async function login(req,res){

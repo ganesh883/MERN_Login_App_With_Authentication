@@ -33,38 +33,47 @@ export async function getUser({username}){
 
 /**register user function */
 export async function registerUser(Credentials){
-
-        try {
-            console.log("Image size (characters):", Credentials.profile.length);
-            const {data : {msg}, status} = await axios.post(`/api/register`, Credentials);
-
-            let {username, email} = Credentials;
-
-            /**send Email */
-            if(status === 201){
-                    await axios.post('/api/registerMail', {username, userEmail : email, text: msg})
-            }
-
-            return Promise.resolve(msg);
-        } catch (error) {
-            return Promise.reject({error});
-        }
-    
-}
-
-/** Login Function */
-export async function verifyPassword({username, password}){
     try {
+        console.log("Image size (characters):", Credentials.profile.length);
+        
+        const response = await axios.post(`/api/register`, Credentials);
+        const { msg } = response.data;
+        const { status } = response;
 
-        if(username){
-            const { data }= await axios.post('/api/login',{username, password})
-            return Promise.resolve({data});
+        const { username, email } = Credentials;
+
+        // Send mail only if registered successfully
+        if(status === 201){
+            await axios.post('/api/registerMail', {
+                username,
+                userEmail: email,
+                text: msg
+            });
         }
+
+        return Promise.resolve(msg);
 
     } catch (error) {
-        return Promise.reject({error: "Password doesn't match..!"});
+        // ✅ Clean readable error message
+        const errMsg = error?.response?.data?.error || "Registration failed!";
+        return Promise.reject(new Error(errMsg));
     }
 }
+
+  
+
+/** Login Function */
+export async function verifyPassword({ username, password }) {
+    try {
+      const response = await axios.post('/api/login', { username, password });
+      return { data: response.data }; 
+    } catch (error) {
+      const errMsg =
+        error.response?.data?.error || error.message || "Password doesn't match!";
+      throw new Error(errMsg);
+    }
+  }
+  
 
 /**Update User Profile Function */
 export async function updateUser(response){
