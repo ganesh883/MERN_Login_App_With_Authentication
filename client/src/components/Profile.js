@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import '../Styles/Component.css';
-import {Link} from 'react-router-dom';
+import {Link , useNavigate} from 'react-router-dom';
 import avatar from '../assets/profile.png';
-import {Toaster} from 'react-hot-toast';
+import toast, {Toaster} from 'react-hot-toast';
 import {useFormik} from 'formik';
 import { profileValidation } from "../helper/validate";
 import convertToBase64 from "../helper/convert";
 import useFetch from '../hooks/fetch.hook'
 import { useAuthStore } from "../store/store";
+import { updateUser } from "../helper/helper";
 
 export default function Profile() {
 
+  const navigate = useNavigate();
+
   const [file, setFile] = useState();
-  const {username} = useAuthStore(state => state.auth);
-  const [{ isLoading, apiData, serverError }] = useFetch(`user/${username}`);
+  const [{ isLoading, apiData, serverError }] = useFetch();
   console.log( apiData)
    const formik = useFormik({
       enableReinitialize: true,
@@ -31,8 +33,14 @@ export default function Profile() {
       validateOnBlur: false,
       validateOnChange : false,
       onSubmit : async values =>{
-        values = await Object.assign(values,{profile : file || ''})
-        console.log(values);
+        values = await Object.assign(values,{profile : file || apiData?.profile ||  ''})
+        let updatePromise = updateUser(values);
+
+        toast.promise(updatePromise,{
+          loading: 'Updating...',
+          success: <b>Update Successfully Done..!</b>,
+          error : <b>Could not Update!</b>
+        });
       }
    })
 
@@ -44,6 +52,12 @@ export default function Profile() {
    const onUpload = async e=>{
     const base64 = await convertToBase64(e.target.files[0]);
     setFile(base64);
+   }
+
+   //logout handler function
+   function userLogout(){
+    localStorage.removeItem('token')
+    navigate('/');
    }
 
   return (
@@ -83,7 +97,7 @@ export default function Profile() {
 
 
             <div>
-              <span>Comeback Later? <Link className='Register' to="/">Logout</Link></span>
+              <span>Comeback Later? <Link onClick={userLogout} className='Register' to="/">Logout</Link></span>
             </div>
 
         </form>

@@ -4,6 +4,14 @@ axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 console.log("Loaded Base URL =>", axios.defaults.baseURL); 
 
 
+/**To get username from Token */
+export async function getUsername(){
+    const token = localStorage.getItem('token')
+    if(!token) return Promise.reject("Cannot find TOken");
+    let decode = jwt_decode(token)
+    return decode;
+}
+
 /**authenticate Function */
 export async function authenticate(username) {
     try {
@@ -59,8 +67,6 @@ export async function registerUser(Credentials){
         return Promise.reject(new Error(errMsg));
     }
 }
-
-  
 
 /** Login Function */
 export async function verifyPassword({ username, password }) {
