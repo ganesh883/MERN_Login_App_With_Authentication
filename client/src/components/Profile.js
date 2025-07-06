@@ -16,7 +16,7 @@ export default function Profile() {
 
   const [file, setFile] = useState();
   const [{ isLoading, apiData, serverError }] = useFetch();
-  console.log( apiData)
+  
    const formik = useFormik({
       enableReinitialize: true,
      

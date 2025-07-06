@@ -36,7 +36,7 @@ export default function Password() {
   
         const res = await loginPromise;
   
-        // ✅ Ensure res.data exists before destructuring
+        //Ensure res.data exists before destructuring
         if (res?.data?.token) {
           localStorage.setItem('token', res.data.token);
           navigate('/profile');

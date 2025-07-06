@@ -67,7 +67,7 @@ export async function registerUser(Credentials){
         return Promise.resolve(msg);
 
     } catch (error) {
-        // ✅ Clean readable error message
+        //Clean readable error message
         const errMsg = error?.response?.data?.error || "Registration failed!";
         return Promise.reject(new Error(errMsg));
     }
