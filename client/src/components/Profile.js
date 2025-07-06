@@ -27,8 +27,7 @@ export default function Profile() {
         email: apiData?.email ||  '',
         address: apiData?.address || '',
         city: apiData?.city || '' 
-      }
-      ,
+      },
       validate : profileValidation,
       validateOnBlur: false,
       validateOnChange : false,
