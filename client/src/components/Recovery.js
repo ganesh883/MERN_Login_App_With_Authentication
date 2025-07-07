@@ -5,7 +5,7 @@ import avatar from '../assets/profile.png';
 import toast, {Toaster} from 'react-hot-toast';
 import { useAuthStore } from "../store/store";
 import { generateOTP, verifyOTP } from "../helper/helper";
-import { useNavigate } from "react-router-dom";
+
 
 export default function Recovery() {
 
