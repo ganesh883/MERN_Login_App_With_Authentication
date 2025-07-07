@@ -7,12 +7,20 @@ import {useFormik} from 'formik';
 import {  resetPasswordValidation } from "../helper/validate";
 import { resetPassword } from "../helper/helper";  
 import { useAuthStore } from "../store/store";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+import useFetch from "../hooks/fetch.hook";
+import { useEffect } from "react";
 
 export default function Reset() {
 
   const {username} = useAuthStore(state => state.auth);
   const navigate = useNavigate();
+  const [{isLoading, apiData, status, serverError}] = useFetch('createResetSession')
+
+    useEffect(()=>{
+      console.log(apiData)
+    })
+
 
    const formik = useFormik({
       initialValues :{
@@ -36,6 +44,10 @@ export default function Reset() {
        
       }
    })
+
+   if(isLoading) return <h1>isLoading</h1>
+   if(serverError) return <h1>{serverError.message}</h1>
+   if(status && status!== 201) return <Navigate to={'/password'} replace={true}></Navigate>
 
   return (
     <div className="main-container">
