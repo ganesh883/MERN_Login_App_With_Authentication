@@ -26,7 +26,7 @@ export default function Recovery() {
     e.preventDefault();
 
     try {
-      let {status} = await  verifyOTP({ username, code : OTP});
+      let {status} = await  verifyOTP(username, OTP);
       if(status===201){
         toast.success('Verified Successfully!!');
         return Navigate('/reset');
@@ -71,7 +71,7 @@ export default function Recovery() {
             </div>
 
             <div>
-              <span>Can't get OTP? <button onClick={resendOTP} className="resendbtn">Resend</button></span>
+              <span>Can't get OTP? <button type="button" onClick={resendOTP} className="resendbtn">Resend</button></span>
             </div>
 
         </form>
