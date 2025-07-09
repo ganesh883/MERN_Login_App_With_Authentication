@@ -7,7 +7,6 @@ import {useFormik} from 'formik';
 import { profileValidation } from "../helper/validate";
 import convertToBase64 from "../helper/convert";
 import useFetch from '../hooks/fetch.hook'
-import { useAuthStore } from "../store/store";
 import { updateUser } from "../helper/helper";
 
 export default function Profile() {

@@ -1,7 +1,5 @@
 import React from "react";
 import '../Styles/Component.css';
-import {Link} from 'react-router-dom';
-import avatar from '../assets/profile.png';
 import toast, {Toaster} from 'react-hot-toast';
 import {useFormik} from 'formik';
 import {  resetPasswordValidation } from "../helper/validate";

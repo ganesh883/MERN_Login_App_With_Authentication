@@ -1,7 +1,6 @@
 import React, { use, useEffect, useState } from "react";
 import '../Styles/Component.css';
-import {Link, useNavigate} from 'react-router-dom';
-import avatar from '../assets/profile.png';
+import {useNavigate} from 'react-router-dom';
 import toast, {Toaster} from 'react-hot-toast';
 import { useAuthStore } from "../store/store";
 import { generateOTP, verifyOTP } from "../helper/helper";
