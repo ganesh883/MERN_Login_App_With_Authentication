@@ -1,28 +1,28 @@
 # MERN Stack Authentication App
 
-A full-featured authentication system built with the MERN stack (MongoDB, Express, React, Node.js). Includes registration, login, profile update, password reset via OTP, and protected routes.
+A complete authentication system built with the **MERN stack** – featuring registration, login, profile management, password reset via OTP, and protected routes.
 
 ---
 
 ## 🔧 Tech Stack
 
-- **Frontend:** React, React Router, Formik, React Hot Toast
-- **Backend:** Node.js, Express
-- **Database:** MongoDB (via Mongoose)
-- **Authentication:** JWT (JSON Web Token), Bcrypt
-- **Email Service:** Nodemailer
-- **Utilities:** Axios, dotenv
+- **Frontend:** React, React Router, Formik, React Hot Toast  
+- **Backend:** Node.js, Express  
+- **Database:** MongoDB (with Mongoose)  
+- **Authentication:** JWT (JSON Web Token), Bcrypt  
+- **Email Service:** Nodemailer  
+- **Utilities:** Axios, dotenv  
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-- ✅ User Registration (with fields: firstName, lastName, mobile, address, city)
-- 🔐 Secure Login using JWT
-- 🙍‍♂️ View & Update Profile
-- 📩 OTP-based Password Reset
-- 🔐 Protected Routes
-- ☁️ Profile Image Upload (Base64)
+- ✅ **User Registration** (with fields: `firstName`, `lastName`, `mobile`, `address`, `city`)  
+- 🔐 **JWT-Based Login**  
+- 👤 **View & Update User Profile**  
+- 🔁 **OTP-Based Password Reset** via Email  
+- 🔒 **Protected Routes** with Token Verification  
+- 🖼️ **Profile Image Upload** (Base64 encoded)
 
 ---
 
@@ -30,14 +30,14 @@ A full-featured authentication system built with the MERN stack (MongoDB, Expres
 
 ```
 mern-login-app/
-├── client/               # React frontend
+├── client/               # React Frontend
 │   ├── components/
 │   ├── pages/
 │   ├── helper/
 │   ├── store/
 │   ├── Styles/
 │   └── main.jsx
-├── server/               # Express backend
+├── server/               # Express Backend
 │   ├── controllers/
 │   ├── middleware/
 │   ├── models/
@@ -51,7 +51,7 @@ mern-login-app/
 
 ## 🚀 Getting Started
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/yourusername/mern-login-app.git
@@ -67,7 +67,7 @@ cd server
 npm install
 ```
 
-Create a `.env` file in `server/` with:
+Create a `.env` file inside the `server/` directory with the following content:
 
 ```
 PORT=8080
@@ -77,7 +77,7 @@ EMAIL=your_email@gmail.com
 EMAIL_PASS=your_email_password_or_app_password
 ```
 
-Run the backend:
+Start the backend server:
 
 ```bash
 npm run start
@@ -93,7 +93,8 @@ npm install
 npm run dev
 ```
 
+---
+
 ## 👨‍💻 Author
 
-**Ganesh K**  
-
+**Ganesh K**
